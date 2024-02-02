@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     password:{
-        tyoe: String,
+        type: String,
         required: true
     }
 },{timestamps: true}) // time of creation and time of update
