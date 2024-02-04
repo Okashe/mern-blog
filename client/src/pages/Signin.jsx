@@ -1,39 +1,45 @@
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, Label, TextInput} from 'flowbite-react'
+import {Alert, Button, Label, TextInput} from 'flowbite-react'
 import { useState } from 'react'
+import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Signin = () => {
   const [formData, setFormData] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const {loading, error:errorMessage } = useSelector(state => state.user)
+ 
 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const handleChange = (e)=>{
+
+  const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async(e) => {
     e.preventDefault()
     if(!formData.email || !formData.password){
-      return setErrorMessage("All fields are required")
+      return dispatch(signInFailure('Please fill the fields'))
     }
     try{
-        setLoading(true)
-        setErrorMessage(null)
+        dispatch(signInStart())
         const res = await fetch('/api/auth/signin',{
           method:"POST",
           headers:{"Content-Type":"application/json"},
           body: JSON.stringify(formData)
+          
         })
         const data = await res.json()
         if(data.success === false){
-          return setErrorMessage(data.message)
+         dispatch(signInFailure(data.message))
         }
-        setLoading(false)
-        navigate('/')
+        if(res.ok){
+           dispatch(signInSuccess(data))
+           navigate('/')
+        }
+       
         
     }catch(error){
-      setLoading(false)
-      setErrorMessage(error.message)
+     dispatch(signInFailure(error.message))
     }
      
   }
@@ -82,6 +88,11 @@ const Signin = () => {
             <Link to='/signup' className='text-blue-500'>
               Sign Up
             </Link>
+            {errorMessage&&(
+              <Alert className='mt-5' color='failure'>
+                {errorMessage}
+              </Alert>
+            )}
          </div>
        </div>
       </div>  
