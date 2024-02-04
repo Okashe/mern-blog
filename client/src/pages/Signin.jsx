@@ -1,8 +1,10 @@
 import {Link, useNavigate} from 'react-router-dom'
-import {Alert, Button, Label, TextInput} from 'flowbite-react'
+import {Alert, Button, Label, Spinner, TextInput} from 'flowbite-react'
 import { useState } from 'react'
 import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import OAuth from '../components/OAuth'
+
 
 const Signin = () => {
   const [formData, setFormData] = useState({})
@@ -80,8 +82,14 @@ const Signin = () => {
              />
           </div>
           <Button gradientDuoTone='purpleToPink' type='submit'>
-            Sign In
+            {loading ?(
+              <>
+               <Spinner size='sm' />
+               <span className='pl-3'>Loading...</span>
+              </>
+            ):(' Sign In')}
           </Button>
+          <OAuth/>
          </form>
          <div className="flex gap-2 text-sm mt-5">
             <span>A new user?</span>

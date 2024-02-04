@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom'
-import {Button, Label, Spinner, TextInput} from 'flowbite-react'
+import {Alert, Button, Label, Spinner, TextInput} from 'flowbite-react'
 import { useState } from 'react'
+import OAuth from '../components/OAuth'
 
 const Signup = () => {
   const [loading, setLoading] = useState(false)
@@ -55,6 +56,7 @@ const handleSubmit = async (e)=>{
           <div className=''>
              <Label value='Your username'/>
              <TextInput
+             required
                type='text'
                placeholder='Username'
                id='username'
@@ -64,6 +66,7 @@ const handleSubmit = async (e)=>{
           <div className=''>
              <Label value='Your email'/>
              <TextInput
+             required
                type='email'
                placeholder='name@company.com'
                id='email'
@@ -73,6 +76,7 @@ const handleSubmit = async (e)=>{
           <div className='Your password'>
              <Label value='Your password'/>
              <TextInput
+              required
                type='password'
                placeholder='Password'
                id='password'
@@ -82,12 +86,14 @@ const handleSubmit = async (e)=>{
           <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
            {loading ? (<> <Spinner size='sm'/> <span className='pl-3'>Loading...</span></>):'Sign Up'} 
           </Button>
+           <OAuth/>
          </form>
          <div className="flex gap-2 text-sm mt-5">
             <span>have an account?</span>
             <Link to='/signin' className='text-blue-500'>
               Sign In
             </Link>
+             {errorMessage&&<Alert color='failure'><span>{errorMessage}</span></Alert>}
          </div>
        </div>
       </div>  
